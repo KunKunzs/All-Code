@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 设置总体游戏界面 */
+        #main {
+            width: 360px;
+            height: 420px;
+            border: 10px black solid;
+            background-color: #b7d4a8;
+            border-radius: 20px;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        /* 设置游戏窗口 */
+        #stage {
+            width: 304px;
+            height: 304px;
+            border: 2px black solid;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        /* 设置蛇 */
+        #snake>div {
+            width: 10px;
+            height: 10px;
+            background-image: url("/11_Javascript/exercise/img/9.jpg");
+            background-size: contain;
+            position: absolute;
+        }
+
+        /* 设置食物 */
+        #food {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 100px;
+            left: 120px;
+            display: flex;
+            flex-flow: wrap;
+        }
+
+        /* 给食物设置样式 */
+        #food>div {
+            width: 5px;
+            height: 5px;
+            background-color: black;
+            transform: rotate(45deg);
+        }
+
+        /* 设置分数和等级的信息 */
+        #info {
+            width: 304px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: space-between;
+            font: bold 20px courier;
+        }
+
+        #btn{
+            width: 60px;
+            background-color: #b7d4a8;
+            position: absolute;
+            left: 140px;
+            top:350px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div id="stage">
+            <div id="snake">
+                <div></div>
+            </div>
+            <div id="food">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div id="info">
+            <div>SCORE: <span id="score">0</span></div>
+            <div>LEVEL: <span id="level">1</span></div>
+        </div>
+        <button id="btn">重新开始</button>
+    </div>
+    
+</body>
+
+<script>
+    // 获取蛇
+    let snake = document.getElementById("snake")
+    // 获取蛇的各个部分
+    let snakes = snake.getElementsByTagName("div")
+    // 获取食物
+    let food = document.getElementById("food")
+    // 获取分数和等级的span
+    let scoreSpan = document.getElementById("score")
+    let levelSpan = document.getElementById("level")
+    // 创建变量存储分数和等级
+    let score = 0
+    let level = 0
+
+    // 定义一个变量存储蛇移动的方向
+    let dir
+    // 定义一个变量表示按键是否可用
+    let keyAcitve = true;
+    // 获取重新开始按钮
+    let btn = document.getElementById("btn")
+    // 定义一个数组存储合法的方向
+    const keyArr = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "w", "a", "s", "d"]
+    // 创建一个对象
+    const reobj = {
+        ArrowUp: "ArrowDown",
+        ArrowDown: "ArrowUp",
+        ArrowLeft: "ArrowRight",
+        ArrowRight: "ArrowLeft",
+        w: "s",
+        s: "w",
+        a: "d",
+        d: "a"
+    }
+
+    // 给按钮绑定刷新页面的功能
+    btn.onclick = function(){
+        location.reload()
+    }
+
+    // 改变食物的位置
+    function changeFood() {
+        const x = Math.floor(Math.random() * 30) * 10
+        const y = Math.floor(Math.random() * 30) * 10
+        food.style.left = x + "px"
+        food.style.top = y + "px"
+    }
+    //changeFood()
+
+    // 绑定键盘事件
+    document.addEventListener("keydown", (event) => {
+        // 判断用户按的键是否合法并且禁止掉头
+        if (keyArr.includes(event.key) && reobj[dir] !== event.key && keyAcitve) {
+            // 设置方向
+            dir = event.key
+            // 将按键设置为不可用
+            keyAcitve = false
+        }
+    })
+
+    // 定时器控制速度
+    // 键盘事件控制方向，解决了卡顿问题
+    setTimeout(function move() {
+        // 获取蛇头
+        let head = snakes[0]
+        // 获取蛇头的坐标
+        let x = head.offsetLeft
+        let y = head.offsetTop
+        
+        switch (dir) {
+            case "ArrowUp":
+            case "w":
+                console.log("↑")
+                // 向上移动蛇
+                y -= 10
+                break
+            case "ArrowDown":
+            case "s":
+                console.log("↓")
+                // 向下移动蛇
+                y += 10
+                break
+            case "ArrowLeft":
+            case "a":
+                console.log("←")
+                // 向左移动蛇
+                x -= 10
+                break
+            case "ArrowRight":
+            case "d":
+                console.log("→")
+                // 向右移动蛇
+                x += 10
+                break
+        }
+
+        // 检查蛇是否吃到食物
+        if (head.offsetLeft === food.offsetLeft && head.offsetTop === food.offsetTop) {
+            // 改变食物位置
+            changeFood()
+            // 增加蛇的身体
+            snake.insertAdjacentHTML("beforeend", "<div/>")
+            score++
+            scoreSpan.textContent = score * 10
+            // 检查等级
+            if (score % 10 === 0 && level < 14){
+                level++
+                levelSpan.textContent = level + 1
+            }
+        }
+
+        // 判断蛇是否撞墙
+        if (x < 0 || x > 290 || y < 0 || y > 290) {
+            alert("撞到墙壁！游戏结束！")
+            // 游戏结束
+            return
+        }
+
+        // 判断蛇是否撞到自己
+        for (let i = 0; i < snakes.length - 1; i++) {
+            if(snakes[i].offsetLeft === x && snakes[i].offsetTop === y){
+                alert("撞到自己！游戏结束！")
+                return
+            }
+        }
+        
+        // 获取尾巴
+        const tail = snakes[snakes.length - 1]
+        // 移动蛇的位置
+        tail.style.left = x + "px"
+        tail.style.top = y + "px"
+        // 将尾巴移动到蛇头的位置
+        snake.insertAdjacentElement("afterbegin", tail)
+        // 将按键设置为可用
+        keyAcitve = true
+
+        setTimeout(move, 150 - level * 10)
+    }, 150 - level * 10)
+</script>
+
+</html>

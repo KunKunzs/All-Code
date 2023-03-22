@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body{
+            height: 2000px;
+        }
+
+        .box1{
+            width: 500px;
+            height: 100px;
+            background-color: #bfa;
+
+            /* 
+                粘滞定位
+                    - 当元素的position属性设置为sticky时则开启了元素的粘滞定位
+                    - 粘滞定位和相对定位的特点基本一致，
+                        不同的是粘滞定位可以在元素达到某个位置时将其固定
+            */
+            position:sticky;
+            top: 10px;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1"></div>
+</body>
+</html>

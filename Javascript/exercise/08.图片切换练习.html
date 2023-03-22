@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #outer {
+            width: 500px;
+            margin: 50px auto;
+            padding: 10px;
+            background-color: #bfa;
+            text-align: center;
+        }
+    </style>
+    <script>
+        window.onload = function(){
+            //获取两个按钮
+            var prev = document.getElementById("prev");
+            var next = document.getElementById("next");
+
+            // 获取img标签
+            var img = document.getElementsByTagName("img")[0];
+
+            // 创建一个数组来保存图片路径
+            var imgArr = ["img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg"]
+
+            // 获取info
+            var info = document.getElementById("info");
+            var i = 0;
+            info.innerHTML = "一共"+imgArr.length+"张图片，当前第"+(i+1)+"张";
+
+            
+            // 为两个按钮绑定单击响应函数
+            prev.onclick=function(){
+                // alert("上一张");
+                i--;
+                if(i<0){
+                    i = imgArr.length-1;
+                }
+                img.src = imgArr[i];
+                info.innerHTML = "一共"+imgArr.length+"张图片，当前第"+(i+1)+"张";
+            };
+
+            next.onclick=function(){
+                // alert("下一张");
+                i++;
+                if(i > imgArr.length-1){
+                    i=0;
+                }
+                img.src = imgArr[i];
+                info.innerHTML = "一共"+imgArr.length+"张图片，当前第"+(i+1)+"张";
+            };
+
+            
+
+
+        };
+    </script>
+</head>
+
+<body>
+    <div id="outer">
+        <p id="info"></p>
+        <img src="img/1.jpg" alt="冰棍">
+
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    div {
+      width: 80px;
+    }
+
+    input[type=text] {
+      width: 50px;
+      height: 44px;
+      outline: none;
+      border: 1px solid #ccc;
+      text-align: center;
+      border-right: 0;
+    }
+
+    input[type=button] {
+      height: 24px;
+      width: 22px;
+      cursor: pointer;
+    }
+
+    input {
+      float: left;
+      border: 1px solid #ccc;
+
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <input type="text" id="total" value="1" readonly>
+    <input type="button" value="+" id="add">
+    <input type="button" value="-" id="reduce" disabled>
+    <script>
+      // 获取加减按钮和文本框
+      let addBtn = document.querySelector("#add")
+      let reduceBtn = document.querySelector("#reduce")
+      let text = document.querySelector("#total")
+      // let num = 1
+      // 给＋和-按钮绑定点击事件
+      addBtn.addEventListener("click", function () {
+        // num++
+        // text.value = num
+        // 隐式转换
+        text.value++
+        reduceBtn.disabled = false
+      })
+
+      reduceBtn.addEventListener("click", function () {
+        text.value--
+        if (text.value <= 1) {
+          reduceBtn.disabled = true
+        }
+      })
+    </script>
+  </div>
+</body>
+
+</html>

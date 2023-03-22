@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../js/jquery.js"></script>
+</head>
+
+<body>
+    <!-- 评论面板 -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">发表评论</h3>
+        </div>
+        <form class="panel-body" id="formAddCmt">
+            <div>评论人：</div>
+            <input type="text" class="form-control" name="username" />
+            <div>评论内容：</div>
+            <textarea class="form-control" name="content"></textarea>
+            <button type="submit" class="btn btn-primary">发表评论</button>
+        </form>
+    </div>
+
+    <!-- 评论列表 -->
+    <ul class="list-group" id="cmt-list">
+        <li class="list-group-item">
+            <span class="badge" style="background-color: #f0ad4e;">评论时间：</span>
+            <span class="badge" style="background-color: #5bc0d1;">评论人：</span>
+            Item 1
+        </li>
+    </ul>
+
+    <script>
+        $(function () {
+            // 获取评论列表
+            function getCommentList() {
+                $.ajax({
+                    method: 'GET',
+                    url: 'http://www.liulongbin.top:3006/api/cmtlist',
+                    success: function (res) {
+                        // console.log(res);
+                        // 判断是否获取成功
+                        if (res.status !== 200) {
+                            return alert('获取评论列表失败！')
+                        }
+                        // 定义一个数组用来存数据
+                        let arr = []
+                        // 遍历数据并渲染页面
+                        $.each(res.data, function (i, item) {
+                            let str = '<li class="list-group-item"><span class="badge" style="background-color: #f0ad4e;">评论时间：' + item.time + '</span><span class="badge" style="background-color: #5bc0d1;">评论人：' + item.username + '</span>' + item.content + '</li>'
+                            // 将数据添加到数组中
+                            arr.push(str)
+                        })
+                        // 将数据添加到ul中
+                        $('#cmt-list').empty().append(arr.join(''))
+                    }
+                })
+            }
+            getCommentList()
+
+            // 绑定提交事件
+            $('#formAddCmt').submit(function (e) {
+                // 清除默认样式
+                e.preventDefault()
+                let data = $(this).serialize()
+                console.log(data);
+                $.post('http://www.liulongbin.top:3006/api/addcmt',data,function(res){
+                    if(res.status !==201){
+                        return alert('发表评论失败!') 
+                    }
+                    // 重新渲染页面
+                    getCommentList()
+                    // 重置表单数据
+                    $('#formAddCmt')[0].reset()
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

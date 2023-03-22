@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 设置外部容器 */
+        #outer{
+            width: 520px;
+            height: 333px;
+            margin: 50px auto;
+            padding: 10px 0;
+            background-color: antiquewhite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 设置imgList */
+        #imgList{
+            /* 去除项目符号 */
+            list-style: none;
+            /* 设置ul的宽度 */
+            /* width: 2500px; */
+            position: absolute;
+            /* 设置偏移量 */
+            /* 每向左移动520px就会显示下一张图片 */
+            left: 0px;
+        }
+
+        /* 设置li */
+        #imgList li{
+            /* 设置图片浮动 */
+            float: left;
+            margin: auto 10px;
+        }
+
+        /* 设置导航按钮 */
+        #navDiv{
+            position: absolute;
+            /* 设置底边距 */
+            bottom: 10px;
+        }
+        #navDiv a{
+            /* 设置超链接浮动 */
+            float: left;
+            /* 设置超链接宽高 */
+            width: 10px;
+            height: 10px;
+            background-color: gray;
+            /* 设置间距 */
+            margin: 0 5px;
+            /* 设置透明 */
+            opacity: 0.5;
+            /*兼容IE8透明*/
+            filter: alpha(opacity=50);
+            /* 设置为圆形 */
+            border-radius: 50%;
+        }
+        /* 设置鼠标移入效果 */
+        #navDiv a:hover{
+            background-color: black;
+        }
+    </style>
+    <!-- 引用工具 -->
+    <script src="/11_Javascript/exercise/js/tools.js"></script>
+
+    <script>
+        window.onload = function(){
+            var imgList = document.getElementById("imgList");
+            var imgArr = document.getElementsByTagName("img");
+
+            // 设置imgList的宽度
+            imgList.style.width = 520 * imgArr.length + "px";
+
+            // 设置按钮居中
+            var outer = document.getElementById("outer");
+            var navDiv = document.getElementById("navDiv");
+            navDiv.style.left = (outer.offsetWidth - navDiv.offsetWidth) / 2 + "px";
+
+            // 默认显示图片的索引
+            var index = 0;
+            // 获取所有的a
+            var allA = document.getElementsByTagName("a");
+            // 设置默认选中效果
+            allA[index].style.backgroundColor = "black";
+            // 给每个超链接绑定单击响应函数
+            for(var i = 0;i < allA.length;i++){
+                //给每一个超链接添加标签
+                allA[i].tag = i;
+                allA[i].onclick = function(){
+                    //关闭自动切换
+                    clearInterval(timer);
+                    // 获取点击超链接的索引并将其设置为index
+                    index = this.tag;
+                    //imgList.style.left = index * -520 + "px";
+                    move(imgList , "left" , -520 * index , 52 ,function(){
+                        //动画执行完毕，开启自动切换
+                        autoChange();
+                    });
+                    // 设置选中的a
+                    setA();
+                };
+            }
+
+            //自动切换图片
+            autoChange();
+
+            //定义一个自动切换的标识
+            var timer;
+            // 创建自动调用方法
+            function autoChange(){
+                // 开启一个定时器，用来自动切换图片
+                timer = setInterval(function(){
+                    index++;
+                    index = index % imgArr.length; 
+                    // 执行动画，切换图片
+                    move(imgList , "left" , -520 * index , 52 ,function(){
+                        //设置导航按钮
+                        setA();
+                    });
+                },1500)
+            }
+
+            //创建一个方法用来设置选中的a
+            function setA(){
+                //判断图片是否为最后一张
+                if(index >= imgArr.length - 1){
+                    index = 0;
+                    // 此时显示的最后一张图片，而最后一张图片和第一张是一模一样
+                    // 通过CSS将最后一张切换成第一张
+                    imgList.style.left = 0;
+                }
+                //遍历所有的a，并将它们的背景颜色设置为灰色
+                for(var j = 0;j < allA.length;j++){
+                        allA[j].style.backgroundColor = "";
+                    }
+                    //将选中的a设置为黑色
+                    allA[index].style.backgroundColor = "black";
+            };
+        };
+    </script>
+</head>
+<body>
+    <!-- 创建一个div，来作为大的容器 -->
+    <div id="outer">
+        <!-- 创建一个ul来放置图片 -->
+        <ul id="imgList">
+            <li><img src="img/1.jpg" alt=""></li>
+            <li><img src="img/2.jpg" alt=""></li>
+            <li><img src="img/3.jpg" alt=""></li>
+            <li><img src="img/4.jpg" alt=""></li>
+            <li><img src="img/5.jpg" alt=""></li>
+            <li><img src="img/1.jpg" alt=""></li>
+        </ul>
+
+        <!-- 创建导航按钮 -->
+        <div id="navDiv">
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+        </div>
+    </div>
+
+</body>
+</html>
